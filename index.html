@@ -357,6 +357,36 @@
           </div>
         </article>
 
+        <!-- CARD 4: AETHER BLADE PIXI v8 EDITION -->
+        <article class="card pixi">
+          <div class="cover-wrap">
+            <canvas id="cover-aether-pixi" width="320" height="180"></canvas>
+            <span class="cover-tag">PixiJS v8 GPU 引擎 • 森林光束 & 爆破震波</span>
+          </div>
+          <div class="card-body">
+            <h2>AETHER BLADE <span>PixiJS v8 版</span></h2>
+            <p class="desc">
+              完整沿用《聖樹傳說》10 房間解謎、紅藍水晶、聖火法杖與商店核心，將渲染層全面升級為 <strong>PixiJS v8 GPU 場景圖</strong>：加入<strong>森林斜射耶穌光束、炸彈/Boss 受擊空間折射震波、GPU Sprite Pooling</strong> 與即時 GPU 遙測面板。
+            </p>
+            <div class="pills">
+              <span class="pill">PixiJS v8 WebGL2</span>
+              <span class="pill">森林耶穌光束</span>
+              <span class="pill">爆破空間折射震波</span>
+              <span class="pill">GPU Sprite Pooling</span>
+              <span class="pill">即時 GPU 遙測 HUD</span>
+              <span class="pill">手機觸控手把</span>
+            </div>
+            <div class="controls-box">
+              <strong>操作說明：</strong>
+              與原版完全一致・<kbd>G</kbd> 即時切換 PixiJS Filter 對比・<kbd>Space</kbd> 揮劍/迴旋斬・<kbd>E</kbd> 道具・<kbd>Q</kbd> 切換
+            </div>
+            <div class="actions">
+              <a class="btn play-pixi" href="https://akkuo.github.io/aether-blade-pixi/" target="_blank" rel="noopener">▶ 立即遊玩</a>
+              <a class="btn ghost" href="https://github.com/Akkuo/aether-blade-pixi" target="_blank" rel="noopener">GitHub</a>
+            </div>
+          </div>
+        </article>
+
         <!-- CARD 4: ORIGAMI SKY (THREE.JS 3D) -->
         <article class="card origami">
           <div class="cover-wrap">
@@ -416,10 +446,12 @@
         const c2 = document.getElementById('cover-aether').getContext('2d');
         const c3 = document.getElementById('cover-pixi').getContext('2d');
         const c4 = document.getElementById('cover-origami').getContext('2d');
+        const c5 = document.getElementById('cover-aether-pixi').getContext('2d');
         c1.imageSmoothingEnabled = false;
         c2.imageSmoothingEnabled = false;
         c3.imageSmoothingEnabled = false;
         c4.imageSmoothingEnabled = true;
+        c5.imageSmoothingEnabled = false;
 
         function drawChromaCover(t) {
           const isLunar = Math.floor(t / 3.2) % 2 === 1;
@@ -646,12 +678,55 @@
           c4.fillText('THREE.JS 3D • AERODYNAMIC ORIGAMI GLIDER', 14, 168);
         }
 
+        function drawAetherPixiCover(t) {
+          c5.fillStyle = '#1d2436';
+          c5.fillRect(0, 0, 320, 180);
+          // Dungeon tiled floor
+          c5.fillStyle = '#2d334d';
+          for (let y = 16; y < 164; y += 20) {
+            for (let x = 16; x < 304; x += 20) {
+              c5.fillRect(x + 1, y + 1, 18, 18);
+            }
+          }
+          // Glowing braziers & additive torchlight
+          c5.save();
+          c5.globalCompositeOperation = 'lighter';
+          for (const [bx, by] of [[72, 64], [248, 64], [72, 128], [248, 128]]) {
+            const g = c5.createRadialGradient(bx, by, 2, bx, by, 44 + Math.sin(t * 10 + bx) * 4);
+            g.addColorStop(0, 'rgba(255, 168, 62, 0.55)');
+            g.addColorStop(1, 'rgba(0,0,0,0)');
+            c5.fillStyle = g;
+            c5.fillRect(bx - 48, by - 48, 96, 96);
+            c5.fillStyle = '#fff399';
+            c5.fillRect(bx - 3, by - 3, 6, 6);
+          }
+          // Shockwave pulse from central Aether Triforce
+          const sr = ((t * 68) % 120) + 10;
+          const a = Math.max(0, 1 - sr / 130);
+          c5.strokeStyle = `rgba(110, 245, 185, ${(a * 0.85).toFixed(2)})`;
+          c5.lineWidth = 3;
+          c5.beginPath();
+          c5.arc(160, 92, sr, 0, Math.PI * 2);
+          c5.stroke();
+          c5.restore();
+          // Golden Triforce relic
+          const ry = 92 + Math.sin(t * 4) * 3;
+          c5.fillStyle = '#ffe066';
+          c5.beginPath();
+          c5.moveTo(160, ry - 14); c5.lineTo(174, ry + 10); c5.lineTo(146, ry + 10);
+          c5.closePath(); c5.fill();
+          c5.fillStyle = '#9effb8';
+          c5.font = 'bold 10px monospace';
+          c5.fillText('PIXI.JS v8 • DUNGEON LIGHTING + SHOCKWAVE', 14, 168);
+        }
+
         function tick(now) {
           const t = now / 1000;
           drawChromaCover(t);
           drawAetherCover(t);
           drawPixiCover(t);
           drawOrigamiCover(t);
+          drawAetherPixiCover(t);
           requestAnimationFrame(tick);
         }
         requestAnimationFrame(tick);
