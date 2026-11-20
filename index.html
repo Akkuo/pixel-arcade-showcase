@@ -99,6 +99,9 @@
       .card.origami:hover {
         border-color: rgba(126, 242, 255, 0.68);
       }
+      .card.shatter:hover {
+        border-color: rgba(255, 110, 74, 0.68);
+      }
       .cover-wrap {
         position: relative;
         aspect-ratio: 16 / 9;
@@ -219,6 +222,10 @@
       .btn.play-origami {
         background: linear-gradient(135deg, #7ef2ff, #ffe078);
         color: #0b1424;
+      }
+      .btn.play-shatter {
+        background: linear-gradient(135deg, #ff7e47, #ffd047);
+        color: #1c0c06;
       }
       .btn.ghost {
         flex: 0 0 auto;
@@ -429,6 +436,36 @@
             </div>
           </div>
         </article>
+
+        <!-- CARD 6: SHATTER LAB 3D PHYSICS -->
+        <article class="card shatter">
+          <div class="cover-wrap">
+            <canvas id="cover-shatter" width="320" height="180"></canvas>
+            <span class="cover-tag">Three.js + cannon-es • 單檔 3D 物理破壞</span>
+          </div>
+          <div class="card-body">
+            <h2>SHATTER LAB <span>3D 物理破壞實驗場</span></h2>
+            <p class="desc">
+              單一 HTML 檔案打造的 3D 剛體破壞沙盒。自由生成<strong>木箱、木板、爆裂油桶、方塊塔與關節布娃娃（Ragdoll）</strong>，抓取拋擲、投擲炸彈引發連鎖爆炸、切換重力與子彈時間慢動作，內建磚牆、疊疊樂 Jenga 等 4 套建築預設。
+            </p>
+            <div class="pills">
+              <span class="pill">單檔 HTML 零素材</span>
+              <span class="pill">抓取拖曳 & 拋擲</span>
+              <span class="pill">連鎖油桶爆破</span>
+              <span class="pill">關節布娃娃 Ragdoll</span>
+              <span class="pill">Jenga / 磚牆預設</span>
+              <span class="pill">重力調整 & 慢動作</span>
+            </div>
+            <div class="controls-box">
+              <strong>操作說明：</strong>
+              <kbd>左鍵</kbd> 抓取拋擲/投彈/發射鐵球・<kbd>右鍵</kbd> 旋轉鏡頭・<kbd>Space</kbd> 慢動作・<kbd>B</kbd> 引爆全部・<kbd>R</kbd> 重置
+            </div>
+            <div class="actions">
+              <a class="btn play-shatter" href="https://akkuo.github.io/shatter-lab/" target="_blank" rel="noopener">▶ 進入實驗場</a>
+              <a class="btn ghost" href="https://github.com/Akkuo/shatter-lab" target="_blank" rel="noopener">GitHub</a>
+            </div>
+          </div>
+        </article>
       </section>
 
       <section class="story">
@@ -460,11 +497,13 @@
         const c3 = document.getElementById('cover-pixi').getContext('2d');
         const c4 = document.getElementById('cover-origami').getContext('2d');
         const c5 = document.getElementById('cover-aether-pixi').getContext('2d');
+        const c6 = document.getElementById('cover-shatter').getContext('2d');
         c1.imageSmoothingEnabled = false;
         c2.imageSmoothingEnabled = false;
         c3.imageSmoothingEnabled = false;
         c4.imageSmoothingEnabled = true;
         c5.imageSmoothingEnabled = false;
+        c6.imageSmoothingEnabled = true;
 
         function drawChromaCover(t) {
           const isLunar = Math.floor(t / 3.2) % 2 === 1;
@@ -733,6 +772,52 @@
           c5.fillText('PIXI.JS v8 • DUNGEON LIGHTING + SHOCKWAVE', 14, 168);
         }
 
+        function drawShatterCover(t) {
+          c6.fillStyle = '#131926';
+          c6.fillRect(0, 0, 320, 180);
+          // Perspective studio grid floor
+          c6.strokeStyle = 'rgba(130, 165, 225, 0.2)';
+          c6.lineWidth = 1;
+          for (let i = 0; i < 8; i++) {
+            const y = 115 + i * 9;
+            c6.beginPath(); c6.moveTo(0, y); c6.lineTo(320, y); c6.stroke();
+          }
+          // Cyclic blast collapse animation
+          const cyc = (t * 0.75) % 2.4;
+          const exploded = cyc > 0.7;
+          const et = Math.max(0, cyc - 0.7);
+          const bricks = [
+            [-28, 0], [0, 0], [28, 0],
+            [-14, -18], [14, -18],
+            [-28, -36], [0, -36], [28, -36],
+          ];
+          for (let i = 0; i < bricks.length; i++) {
+            const [bx, by] = bricks[i];
+            const ang = (i - 3.5) * 0.45;
+            const dx = exploded ? Math.sin(ang) * et * 85 : 0;
+            const dy = exploded ? -Math.abs(Math.cos(ang)) * et * 65 + 48 * et * et : 0;
+            c6.save();
+            c6.translate(160 + bx + dx, 128 + by + dy);
+            if (exploded) c6.rotate(et * (i % 2 === 0 ? 3.5 : -3.5));
+            c6.fillStyle = i === 1 ? '#d93636' : '#c99357';
+            c6.fillRect(-12, -8, 24, 16);
+            c6.strokeStyle = i === 1 ? '#ffd047' : '#7a4b21';
+            c6.lineWidth = 2;
+            c6.strokeRect(-12, -8, 24, 16);
+            c6.restore();
+          }
+          if (exploded && et < 0.6) {
+            c6.strokeStyle = `rgba(255, 168, 56, ${(1 - et / 0.6).toFixed(2)})`;
+            c6.lineWidth = 4;
+            c6.beginPath();
+            c6.arc(160, 124, 12 + et * 150, 0, Math.PI * 2);
+            c6.stroke();
+          }
+          c6.fillStyle = '#ffbe55';
+          c6.font = 'bold 10px monospace';
+          c6.fillText('THREE.JS + CANNON-ES • 3D DESTRUCTION', 14, 168);
+        }
+
         function tick(now) {
           const t = now / 1000;
           drawChromaCover(t);
@@ -740,6 +825,7 @@
           drawPixiCover(t);
           drawOrigamiCover(t);
           drawAetherPixiCover(t);
+          drawShatterCover(t);
           requestAnimationFrame(tick);
         }
         requestAnimationFrame(tick);
