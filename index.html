@@ -102,6 +102,9 @@
       .card.shatter:hover {
         border-color: rgba(255, 110, 74, 0.68);
       }
+      .card.revival:hover {
+        border-color: rgba(110, 240, 150, 0.68);
+      }
       .cover-wrap {
         position: relative;
         aspect-ratio: 16 / 9;
@@ -227,6 +230,10 @@
         background: linear-gradient(135deg, #ff7e47, #ffd047);
         color: #1c0c06;
       }
+      .btn.play-revival {
+        background: linear-gradient(135deg, #6ef096, #ffe078);
+        color: #0b1c12;
+      }
       .btn.ghost {
         flex: 0 0 auto;
         background: rgba(255, 255, 255, 0.08);
@@ -282,7 +289,7 @@
         <span class="eyebrow">GEMINI 4 NEON BENCHMARK • CANVAS 2D • PIXI.JS v8 • THREE.JS 3D • CANNON-ES PHYSICS</span>
         <h1>Gemini 4 Neon 2D × 3D 網頁遊戲實測展間</h1>
         <p class="subtitle">
-          以 6 款可立即遊玩的 2D / 3D 網頁遊戲實測 AI 模型在程式生成、渲染管線、物理模擬與快速迭代上的極限——全站零外部美術與音效素材檔，支援桌面與手機瀏覽器直接試玩。
+          以 7 款可立即遊玩的 2D / 3D 網頁遊戲實測 AI 模型在程式生成、渲染管線、物理模擬與快速迭代上的極限——全站零外部美術與音效素材檔，支援桌面與手機瀏覽器直接試玩。
         </p>
       </header>
 
@@ -466,6 +473,36 @@
             </div>
           </div>
         </article>
+
+        <!-- CARD 7: LAKESHORE REVIVAL 3D RESTORATION -->
+        <article class="card revival">
+          <div class="cover-wrap">
+            <canvas id="cover-revival" width="320" height="180"></canvas>
+            <span class="cover-tag">Three.js 第一人稱 • 單檔 3D 生態修復</span>
+          </div>
+          <div class="card-body">
+            <h2>LAKESHORE REVIVAL <span>湖畔木屋再生 3D</span></h2>
+            <p class="desc">
+              單一 HTML 檔案打造的可行走 3D 修復遊戲。逐片修補湖畔破舊木屋的牆壁、地板與屋頂，到屋外清除荊棘、挖掘<strong>蓄水滲透溝（Swales）</strong>並種植多層次<strong>食物森林</strong>，見證天空、湖水與荒地一步步恢復生機。
+            </p>
+            <div class="pills">
+              <span class="pill">第一人稱 3D 行走</span>
+              <span class="pill">逐片修繕木屋與壁爐</span>
+              <span class="pill">等高線蓄水滲透溝</span>
+              <span class="pill">成長式食物森林</span>
+              <span class="pill">動態天色與蝴蝶生態</span>
+              <span class="pill">單檔 HTML 零素材</span>
+            </div>
+            <div class="controls-box">
+              <strong>操作說明：</strong>
+              <kbd>WASD</kbd> 行走・<kbd>滑鼠</kbd> 環顧・<kbd>左鍵/E</kbd> 智慧修復/除草/挖溝/種樹・<kbd>1–4</kbd> 篩選工具・<kbd>Space</kbd> 輕跳
+            </div>
+            <div class="actions">
+              <a class="btn play-revival" href="https://akkuo.github.io/lakeshore-revival/" target="_blank" rel="noopener">▶ 踏入林地</a>
+              <a class="btn ghost" href="https://github.com/Akkuo/lakeshore-revival" target="_blank" rel="noopener">GitHub</a>
+            </div>
+          </div>
+        </article>
       </section>
 
       <section class="story">
@@ -502,12 +539,14 @@
         const c4 = document.getElementById('cover-origami').getContext('2d');
         const c5 = document.getElementById('cover-aether-pixi').getContext('2d');
         const c6 = document.getElementById('cover-shatter').getContext('2d');
+        const c7 = document.getElementById('cover-revival').getContext('2d');
         c1.imageSmoothingEnabled = false;
         c2.imageSmoothingEnabled = false;
         c3.imageSmoothingEnabled = false;
         c4.imageSmoothingEnabled = true;
         c5.imageSmoothingEnabled = false;
         c6.imageSmoothingEnabled = true;
+        c7.imageSmoothingEnabled = true;
 
         function drawChromaCover(t) {
           const isLunar = Math.floor(t / 3.2) % 2 === 1;
@@ -822,6 +861,43 @@
           c6.fillText('THREE.JS + CANNON-ES • 3D DESTRUCTION', 14, 168);
         }
 
+        function drawRevivalCover(t) {
+          const heal = (Math.sin(t * 0.65) + 1) * 0.5;
+          const lerp = (a, b, p) => Math.round(a + (b - a) * p);
+          c7.fillStyle = `rgb(${lerp(110, 128, heal)}, ${lerp(123, 204, heal)}, ${lerp(126, 240, heal)})`;
+          c7.fillRect(0, 0, 320, 180);
+          // Lake
+          c7.fillStyle = `rgb(${lerp(75, 44, heal)}, ${lerp(92, 166, heal)}, ${lerp(91, 184, heal)})`;
+          c7.fillRect(0, 118, 320, 62);
+          // Meadow shore
+          c7.fillStyle = `rgb(${lerp(115, 70, heal)}, ${lerp(107, 150, heal)}, ${lerp(86, 80, heal)})`;
+          c7.fillRect(0, 96, 320, 32);
+          // Lakeside cabin
+          c7.fillStyle = '#a86b3a';
+          c7.fillRect(120, 68, 80, 42);
+          c7.fillStyle = '#6e3b2e';
+          c7.beginPath(); c7.moveTo(110, 70); c7.lineTo(160, 40); c7.lineTo(210, 70); c7.closePath(); c7.fill();
+          // Cozy glowing window as it heals
+          c7.fillStyle = heal > 0.45 ? '#ffe078' : '#2a2e33';
+          c7.fillRect(148, 82, 24, 18);
+          // Growing food forest trees
+          for (const tx of [54, 86, 236, 268]) {
+            const sc = 0.25 + heal * 0.75;
+            c7.fillStyle = '#5c3c24';
+            c7.fillRect(tx - 3, 102 - 22 * sc, 6, 22 * sc);
+            c7.fillStyle = '#38b85e';
+            c7.beginPath(); c7.arc(tx, 102 - 26 * sc, 15 * sc, 0, Math.PI * 2); c7.fill();
+            if (heal > 0.6) {
+              c7.fillStyle = '#ff6b57';
+              c7.fillRect(tx - 6, 102 - 28 * sc, 4, 4);
+              c7.fillRect(tx + 4, 102 - 22 * sc, 4, 4);
+            }
+          }
+          c7.fillStyle = '#0e2218';
+          c7.font = 'bold 10px monospace';
+          c7.fillText(`THREE.JS 3D • RESTORATION ${Math.round(heal * 100)}%`, 14, 168);
+        }
+
         function tick(now) {
           const t = now / 1000;
           drawChromaCover(t);
@@ -830,6 +906,7 @@
           drawOrigamiCover(t);
           drawAetherPixiCover(t);
           drawShatterCover(t);
+          drawRevivalCover(t);
           requestAnimationFrame(tick);
         }
         requestAnimationFrame(tick);
