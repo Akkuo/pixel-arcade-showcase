@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Pixel Arcade — 雙作品原創像素遊戲展間</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        min-height: 100vh;
+        background:
+          radial-gradient(circle at 18% 12%, rgba(255, 180, 68, 0.14), transparent 40%),
+          radial-gradient(circle at 82% 18%, rgba(64, 214, 255, 0.14), transparent 42%),
+          radial-gradient(circle at 50% 90%, rgba(72, 224, 130, 0.1), transparent 45%),
+          #080b14;
+        color: #eaf0ff;
+        font-family: 'Noto Sans TC', 'Microsoft JhengHei', ui-sans-serif, system-ui, sans-serif;
+        line-height: 1.65;
+        padding: 32px 18px 64px;
+      }
+      .wrap {
+        max-width: 1120px;
+        margin: 0 auto;
+      }
+      header {
+        text-align: center;
+        margin-bottom: 36px;
+      }
+      .eyebrow {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        color: #8effd6;
+        background: rgba(74, 247, 200, 0.12);
+        border: 1px solid rgba(74, 247, 200, 0.35);
+        margin-bottom: 12px;
+      }
+      h1 {
+        font-size: clamp(28px, 4.4vw, 46px);
+        font-weight: 900;
+        letter-spacing: -0.02em;
+        background: linear-gradient(90deg, #ffe078 0%, #7eeeff 52%, #8effb8 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        margin-bottom: 10px;
+      }
+      .subtitle {
+        max-width: 720px;
+        margin: 0 auto;
+        color: #a9b8d9;
+        font-size: 15px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+        gap: 24px;
+        margin-bottom: 42px;
+      }
+      .card {
+        display: flex;
+        flex-direction: column;
+        border-radius: 18px;
+        overflow: hidden;
+        background: rgba(15, 20, 36, 0.82);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow: 0 24px 56px rgba(0, 0, 0, 0.55);
+        transition: transform 0.22s ease, border-color 0.22s ease;
+      }
+      .card:hover {
+        transform: translateY(-4px);
+      }
+      .card.chroma:hover {
+        border-color: rgba(255, 196, 86, 0.55);
+      }
+      .card.aether:hover {
+        border-color: rgba(94, 245, 148, 0.55);
+      }
+      .cover-wrap {
+        position: relative;
+        aspect-ratio: 16 / 9;
+        background: #0a0d18;
+        overflow: hidden;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .cover-wrap canvas {
+        width: 100%;
+        height: 100%;
+        display: block;
+        image-rendering: pixelated;
+      }
+      .cover-tag {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 800;
+        background: rgba(8, 12, 22, 0.78);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(6px);
+      }
+      .card-body {
+        padding: 20px 22px 22px;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        gap: 14px;
+      }
+      .card h2 {
+        font-size: 22px;
+        font-weight: 800;
+        color: #ffffff;
+      }
+      .card h2 span {
+        font-size: 14px;
+        font-weight: 600;
+        color: #9cb0db;
+        margin-left: 6px;
+      }
+      .desc {
+        color: #c2d0ee;
+        font-size: 14px;
+      }
+      .pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .pill {
+        font-size: 11px;
+        font-weight: 700;
+        padding: 3px 9px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: #dce7ff;
+      }
+      .controls-box {
+        padding: 12px 14px;
+        border-radius: 10px;
+        background: rgba(7, 10, 20, 0.65);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        font-size: 12.5px;
+        color: #b4c3e3;
+      }
+      .controls-box strong {
+        color: #ffffff;
+      }
+      .controls-box kbd {
+        display: inline-block;
+        padding: 1px 5px;
+        border-radius: 4px;
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #ffffff;
+        font-size: 11px;
+        font-family: ui-monospace, monospace;
+      }
+      .actions {
+        margin-top: auto;
+        display: flex;
+        gap: 10px;
+        padding-top: 4px;
+      }
+      .btn {
+        flex: 1;
+        text-align: center;
+        text-decoration: none;
+        padding: 11px 16px;
+        border-radius: 10px;
+        font-weight: 800;
+        font-size: 14px;
+        transition: filter 0.15s ease, transform 0.15s ease;
+      }
+      .btn:hover {
+        filter: brightness(1.12);
+        transform: translateY(-1px);
+      }
+      .btn.play-chroma {
+        background: linear-gradient(135deg, #ffae38, #ff6b4a);
+        color: #160c08;
+      }
+      .btn.play-aether {
+        background: linear-gradient(135deg, #3ee07e, #24b8a6);
+        color: #071a10;
+      }
+      .btn.ghost {
+        flex: 0 0 auto;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        color: #dce7ff;
+      }
+
+      /* Dev Story Section */
+      .story {
+        border-radius: 18px;
+        padding: 26px 28px;
+        background: rgba(13, 18, 32, 0.78);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .story h3 {
+        font-size: 20px;
+        font-weight: 800;
+        margin-bottom: 14px;
+        color: #fff2b0;
+      }
+      .story-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 16px;
+      }
+      .story-item {
+        padding: 14px 16px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .story-item h4 {
+        font-size: 14px;
+        font-weight: 800;
+        color: #7eeeff;
+        margin-bottom: 6px;
+      }
+      .story-item p {
+        font-size: 13px;
+        color: #b7c6e6;
+      }
+      footer {
+        text-align: center;
+        margin-top: 32px;
+        font-size: 12px;
+        color: #7688b0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <span class="eyebrow">ZERO-DEPENDENCY • HTML5 CANVAS + WEBGL + WEB AUDIO • DESKTOP & MOBILE</span>
+        <h1>AI 原創 2D 像素遊戲展間</h1>
+        <p class="subtitle">
+          無外部引擎、無外部美術與音效素材包——純由程式生成像素精靈、即時 WebGL Bloom 後處理與 Web Audio 合成配樂，打造兩款截然不同玩法的經典致敬之作，支援鍵盤、手把與手機觸控遊玩。
+        </p>
+      </header>
+
+      <section class="grid">
+        <!-- CARD 1: CHROMA KNIGHT -->
+        <article class="card chroma">
+          <div class="cover-wrap">
+            <canvas id="cover-chroma" width="320" height="180"></canvas>
+            <span class="cover-tag">橫向平台動作 • 6 大獨立生態關卡</span>
+          </div>
+          <div class="card-body">
+            <h2>CHROMA KNIGHT <span>稜鏡騎士</span></h2>
+            <p class="desc">
+              經典《超級瑪利歐》爽快手感融合現代高精度動作。即時切換 <strong>SOLAR 熾陽 ↔ LUNAR 星月</strong> 雙重相位，翻轉世界方塊與重力，挑戰 6 大互斥生態與專屬機關，決戰 2 階段「稜鏡巨像」Boss。
+            </p>
+            <div class="pills">
+              <span class="pill">雙相切換 & 低重力</span>
+              <span class="pill">WebGL 真 Bloom & 色差</span>
+              <span class="pill">F2 即時關卡編輯器</span>
+              <span class="pill">速通殘影 Ghost</span>
+              <span class="pill">水面即時倒影</span>
+              <span class="pill">手機觸控手把</span>
+            </div>
+            <div class="controls-box">
+              <strong>操作說明：</strong>
+              <kbd>A</kbd><kbd>D</kbd> 移動・<kbd>Space</kbd> 跳躍/蹬牆跳・<kbd>X</kbd> 8向衝刺・<kbd>Shift</kbd> 相位切換・<kbd>↓</kbd> 空中重擊・<kbd>1–6</kbd> 選關・<kbd>F2</kbd> 關卡編輯
+            </div>
+            <div class="actions">
+              <a class="btn play-chroma" href="https://akkuo.github.io/chroma-knight/" target="_blank" rel="noopener">▶ 立即遊玩</a>
+              <a class="btn ghost" href="https://github.com/Akkuo/chroma-knight" target="_blank" rel="noopener">GitHub</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- CARD 2: AETHER BLADE -->
+        <article class="card aether">
+          <div class="cover-wrap">
+            <canvas id="cover-aether" width="320" height="180"></canvas>
+            <span class="cover-tag">俯視動作冒險 • 10 房間大地圖＆古神殿</span>
+          </div>
+          <div class="card-body">
+            <h2>AETHER BLADE <span>聖樹傳說</span></h2>
+            <p class="desc">
+              致敬早期《薩爾達傳說》（NES / SNES）的無縫切屏探索冒險。割草碎罐賺盧比、森林道具屋升級武器，善用<strong>滿血劍氣、蓄力迴旋斬、迴力鏢、炸彈與聖火法杖</strong>破解紅藍水晶與推箱機關，奪回聖樹之印。
+            </p>
+            <div class="pills">
+              <span class="pill">薩爾達式捲動切房</span>
+              <span class="pill">紅藍水晶升降機關</span>
+              <span class="pill">聖火點燈 & 推箱解謎</span>
+              <span class="pill">森林道具屋升級</span>
+              <span class="pill">妖精聖泉 & 地牢火把</span>
+              <span class="pill">手機觸控手把</span>
+            </div>
+            <div class="controls-box">
+              <strong>操作說明：</strong>
+              <kbd>WASD</kbd> 移動・<kbd>Space</kbd> 揮劍/蓄力迴旋斬/互動・<kbd>E</kbd> 使用道具・<kbd>Q</kbd> 切換炸彈/迴力鏢/法杖・<kbd>Shift</kbd> 翻滾閃避
+            </div>
+            <div class="actions">
+              <a class="btn play-aether" href="https://akkuo.github.io/aether-blade/" target="_blank" rel="noopener">▶ 立即遊玩</a>
+              <a class="btn ghost" href="https://github.com/Akkuo/aether-blade" target="_blank" rel="noopener">GitHub</a>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="story">
+        <h3>AI 協作開發歷程與 Gemini 4 Neon 實戰亮點</h3>
+        <div class="story-grid">
+          <div class="story-item">
+            <h4>1. 雙階段 HiDPI + WebGL 清晰渲染</h4>
+            <p>解決低解析度畫布拉伸造成中文字糊掉的痛點：像素世界保持點對點銳利，UI 與對話框以原生 Retina 解析度繪製，再送入 WebGL Fragment Shader 疊加真 Bloom 與相位色差。</p>
+          </div>
+          <div class="story-item">
+            <h4>2. 實測驅動的手感與關卡迭代</h4>
+            <p>透過實際試玩修正鏡頭轉向甩動暈眩（改為置中鎖定），並把 6 大關卡拆分為 6 套完全互斥的生態與機關（彈射環、倒影運河、室內火球鏈、極光滑冰氣流）。</p>
+          </div>
+          <div class="story-item">
+            <h4>3. Gemini 4 Neon 開發體感觀察</h4>
+            <p>強項在於跨模組一次整合、快速將抽象體感轉譯成工程解法與端到端部署；但「視覺暈眩、畫面糊度、關卡重複感」仍高度仰賴人類試玩把關——人機短週期協作效果最佳。</p>
+          </div>
+        </div>
+      </section>
+
+      <footer>Built with Vanilla HTML5 Canvas, WebGL & Web Audio API • Zero External Dependencies</footer>
+    </div>
+
+    <script>
+      // Live animated pixel-art cover previews (zero external assets!)
+      (() => {
+        const c1 = document.getElementById('cover-chroma').getContext('2d');
+        const c2 = document.getElementById('cover-aether').getContext('2d');
+        c1.imageSmoothingEnabled = false;
+        c2.imageSmoothingEnabled = false;
+
+        function drawChromaCover(t) {
+          const isLunar = Math.floor(t / 3.2) % 2 === 1;
+          const grad = c1.createLinearGradient(0, 0, 0, 180);
+          grad.addColorStop(0, isLunar ? '#070b1c' : '#24143a');
+          grad.addColorStop(0.6, isLunar ? '#152b5c' : '#80304f');
+          grad.addColorStop(1, isLunar ? '#205982' : '#f0944d');
+          c1.fillStyle = grad;
+          c1.fillRect(0, 0, 320, 180);
+
+          // Sun / Moon
+          c1.fillStyle = isLunar ? '#d9f8ff' : '#fff2b0';
+          c1.beginPath();
+          c1.arc(258, 42, 16, 0, Math.PI * 2);
+          c1.fill();
+          if (isLunar) {
+            c1.fillStyle = '#070b1c';
+            c1.beginPath();
+            c1.arc(264, 39, 13, 0, Math.PI * 2);
+            c1.fill();
+          }
+
+          // Parallax hills
+          c1.fillStyle = isLunar ? '#112247' : '#4a2145';
+          for (let i = 0; i < 6; i++) {
+            const x = ((i * 72 - t * 18) % 432 + 432) % 432 - 60;
+            c1.fillRect(Math.floor(x), 95 + (i % 2) * 14, 18, 85);
+            c1.fillRect(Math.floor(x) + 26, 95 + (i % 2) * 14, 18, 85);
+            c1.fillRect(Math.floor(x) - 4, 89 + (i % 2) * 14, 52, 8);
+          }
+
+          // Ground
+          c1.fillStyle = isLunar ? '#333059' : '#6e4232';
+          c1.fillRect(0, 144, 320, 36);
+          c1.fillStyle = isLunar ? '#39c9c4' : '#44c767';
+          c1.fillRect(0, 144, 320, 6);
+
+          // Floating Solar & Lunar phase blocks
+          c1.fillStyle = isLunar ? 'rgba(255,182,56,0.25)' : '#ffb638';
+          c1.fillRect(190, 96, 48, 14);
+          c1.fillStyle = isLunar ? '#3ee0ff' : 'rgba(62,224,255,0.25)';
+          c1.fillRect(110, 84, 48, 14);
+
+          // Knight + flowing cape
+          const kx = 74;
+          const ky = 122 + Math.sin(t * 7) * 2;
+          c1.strokeStyle = isLunar ? '#35d0ff' : '#ff5247';
+          c1.lineWidth = 4;
+          c1.beginPath();
+          c1.moveTo(kx, ky + 8);
+          c1.quadraticCurveTo(kx - 14, ky + 10 + Math.sin(t * 10) * 4, kx - 24, ky + 14);
+          c1.stroke();
+          c1.fillStyle = '#edf3ff';
+          c1.fillRect(kx, ky, 12, 10);
+          c1.fillStyle = isLunar ? '#4ae8ff' : '#ffcf48';
+          c1.fillRect(kx + 4, ky + 3, 6, 3);
+          c1.fillStyle = '#334575';
+          c1.fillRect(kx + 1, ky + 10, 10, 12);
+
+          // Phase label
+          c1.fillStyle = isLunar ? '#8ff4ff' : '#ffe184';
+          c1.font = 'bold 10px monospace';
+          c1.fillText(isLunar ? 'LUNAR PHASE • 0.78x GRAVITY' : 'SOLAR PHASE • CHROMA SHIFT', 14, 168);
+        }
+
+        function drawAetherCover(t) {
+          c2.fillStyle = '#389948';
+          c2.fillRect(0, 0, 320, 180);
+
+          // Dirt crossroad
+          c2.fillStyle = '#c9a675';
+          c2.fillRect(0, 82, 320, 26);
+          c2.fillRect(142, 0, 36, 180);
+
+          // Fairy spring pond
+          c2.fillStyle = '#247bb8';
+          c2.fillRect(216, 18, 76, 48);
+          c2.fillStyle = '#7ef2ff';
+          c2.fillRect(228, 28, 52, 28);
+          c2.fillStyle = '#fff5b0';
+          c2.fillRect(252 + Math.cos(t * 4) * 14, 40 + Math.sin(t * 5) * 8, 4, 4);
+
+          // Red/Blue Crystal Switch & Barriers
+          const blue = Math.floor(t / 2.2) % 2 === 1;
+          c2.fillStyle = blue ? '#38b6ff' : '#ff4f64';
+          c2.fillRect(46, 36, 14, 14);
+          c2.fillStyle = '#ffffff';
+          c2.fillRect(49, 39, 4, 4);
+          c2.fillStyle = blue ? 'rgba(217,56,74,0.28)' : '#d9384a';
+          c2.fillRect(78, 24, 14, 14);
+          c2.fillRect(78, 42, 14, 14);
+          c2.fillStyle = blue ? '#2a82e0' : 'rgba(42,130,224,0.28)';
+          c2.fillRect(98, 24, 14, 14);
+          c2.fillRect(98, 42, 14, 14);
+
+          // Treasure chest
+          c2.fillStyle = '#b8682c';
+          c2.fillRect(242, 126, 20, 16);
+          c2.fillStyle = '#ffd54f';
+          c2.fillRect(242, 132, 20, 3);
+
+          // Hero & Sword Beam
+          const hx = 152;
+          const hy = 86 + Math.sin(t * 5) * 2;
+          c2.fillStyle = '#2eb85c';
+          c2.fillRect(hx, hy, 14, 16);
+          c2.fillStyle = '#ffd859';
+          c2.fillRect(hx + 2, hy + 2, 10, 4);
+          c2.fillStyle = '#f7cfa0';
+          c2.fillRect(hx + 3, hy + 6, 8, 5);
+
+          // Animated Sword Beam flying right
+          const bx = 172 + ((t * 110) % 130);
+          c2.fillStyle = '#7ef7ff';
+          c2.fillRect(Math.floor(bx), 90, 12, 6);
+          c2.fillStyle = '#ffffff';
+          c2.fillRect(Math.floor(bx) + 2, 92, 8, 2);
+
+          // Trees border
+          c2.fillStyle = '#1f6333';
+          for (let x = 0; x < 320; x += 22) {
+            if (x > 125 && x < 180) continue;
+            c2.fillRect(x, 0, 18, 14);
+            c2.fillRect(x, 166, 18, 14);
+          }
+        }
+
+        function tick(now) {
+          const t = now / 1000;
+          drawChromaCover(t);
+          drawAetherCover(t);
+          requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+      })();
+    </script>
+  </body>
+</html>
