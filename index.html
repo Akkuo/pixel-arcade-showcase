@@ -105,6 +105,9 @@
       .card.revival:hover {
         border-color: rgba(110, 240, 150, 0.68);
       }
+      .card.voxel:hover {
+        border-color: rgba(94, 210, 88, 0.72);
+      }
       .cover-wrap {
         position: relative;
         aspect-ratio: 16 / 9;
@@ -234,6 +237,10 @@
         background: linear-gradient(135deg, #6ef096, #ffe078);
         color: #0b1c12;
       }
+      .btn.play-voxel {
+        background: linear-gradient(135deg, #5ec954, #c79658);
+        color: #0c180a;
+      }
       .btn.ghost {
         flex: 0 0 auto;
         background: rgba(255, 255, 255, 0.08);
@@ -289,7 +296,7 @@
         <span class="eyebrow">GEMINI 4 NEON BENCHMARK • CANVAS 2D • PIXI.JS v8 • THREE.JS 3D • CANNON-ES PHYSICS</span>
         <h1>Gemini 4 Neon 2D × 3D 網頁遊戲實測展間</h1>
         <p class="subtitle">
-          以 7 款可立即遊玩的 2D / 3D 網頁遊戲實測 AI 模型在程式生成、渲染管線、物理模擬與快速迭代上的極限——全站零外部美術與音效素材檔，支援桌面與手機瀏覽器直接試玩。
+          以 8 款可立即遊玩的 2D / 3D 網頁遊戲實測 AI 模型在程式生成、渲染管線、物理模擬與快速迭代上的極限——全站零外部美術與音效素材檔，支援桌面與手機瀏覽器直接試玩。
         </p>
       </header>
 
@@ -503,6 +510,36 @@
             </div>
           </div>
         </article>
+
+        <!-- CARD 8: VOXEL WILDS MINECRAFT-INSPIRED 3D -->
+        <article class="card voxel">
+          <div class="cover-wrap">
+            <canvas id="cover-voxel" width="320" height="180"></canvas>
+            <span class="cover-tag">Three.js 第一人稱 • 單檔 3D 體素生存</span>
+          </div>
+          <div class="card-body">
+            <h2>VOXEL WILDS <span>方塊荒野 3D</span></h2>
+            <p class="desc">
+              單一 HTML 檔案打造的 Minecraft 風格第一人稱體素世界。支援 16×16 像素方塊破壞與放置、<strong>砍樹採集原木 → 開啟合成台製作木劍 → 裝備 3D 木劍狩獵草原野豬</strong>的完整生存循環。
+            </p>
+            <div class="pills">
+              <span class="pill">程序化 16×16 體素貼圖</span>
+              <span class="pill">破壞與放置方塊</span>
+              <span class="pill">砍樹採木 & 合成木劍</span>
+              <span class="pill">3D 漫步野豬狩獵</span>
+              <span class="pill">物品欄 & 任務追蹤</span>
+              <span class="pill">單檔 HTML 零素材</span>
+            </div>
+            <div class="controls-box">
+              <strong>操作說明：</strong>
+              <kbd>WASD</kbd> 移動・<kbd>Space</kbd> 跳躍・<kbd>左鍵</kbd> 破壞/攻擊・<kbd>右鍵</kbd> 放方塊・<kbd>C</kbd> 合成台・<kbd>1–8</kbd> 切換物品欄
+            </div>
+            <div class="actions">
+              <a class="btn play-voxel" href="https://akkuo.github.io/voxel-wilds/" target="_blank" rel="noopener">▶ 進入方塊世界</a>
+              <a class="btn ghost" href="https://github.com/Akkuo/voxel-wilds" target="_blank" rel="noopener">GitHub</a>
+            </div>
+          </div>
+        </article>
       </section>
 
       <section class="story">
@@ -540,6 +577,7 @@
         const c5 = document.getElementById('cover-aether-pixi').getContext('2d');
         const c6 = document.getElementById('cover-shatter').getContext('2d');
         const c7 = document.getElementById('cover-revival').getContext('2d');
+        const c8 = document.getElementById('cover-voxel').getContext('2d');
         c1.imageSmoothingEnabled = false;
         c2.imageSmoothingEnabled = false;
         c3.imageSmoothingEnabled = false;
@@ -547,6 +585,7 @@
         c5.imageSmoothingEnabled = false;
         c6.imageSmoothingEnabled = true;
         c7.imageSmoothingEnabled = true;
+        c8.imageSmoothingEnabled = false;
 
         function drawChromaCover(t) {
           const isLunar = Math.floor(t / 3.2) % 2 === 1;
@@ -898,6 +937,51 @@
           c7.fillText(`THREE.JS 3D • RESTORATION ${Math.round(heal * 100)}%`, 14, 168);
         }
 
+        function drawVoxelCover(t) {
+          c8.fillStyle = '#7cc4ff';
+          c8.fillRect(0, 0, 320, 180);
+          // Blocky clouds
+          c8.fillStyle = 'rgba(255,255,255,0.88)';
+          c8.fillRect(((t * 14) % 380) - 50, 20, 56, 12);
+          c8.fillRect((((t * 10) + 180) % 380) - 50, 36, 44, 10);
+          // Grass & dirt voxel blocks
+          for (let x = 0; x < 320; x += 24) {
+            c8.fillStyle = '#7d5233';
+            c8.fillRect(x, 124, 24, 56);
+            c8.fillStyle = '#5ec954';
+            c8.fillRect(x, 118, 24, 10);
+            c8.strokeStyle = 'rgba(0,0,0,0.16)';
+            c8.strokeRect(x, 118, 24, 24);
+          }
+          // Voxel oak tree
+          c8.fillStyle = '#6e492b';
+          c8.fillRect(58, 66, 18, 52);
+          c8.fillStyle = '#389444';
+          c8.fillRect(36, 36, 62, 34);
+          c8.fillRect(48, 22, 38, 16);
+          // Cute pink voxel pig walking
+          const px = 190 + Math.sin(t * 1.4) * 26;
+          c8.fillStyle = '#f5a3b0';
+          c8.fillRect(Math.floor(px), 96, 34, 20);
+          c8.fillRect(Math.floor(px) - 12, 92, 18, 18);
+          c8.fillStyle = '#e38494';
+          c8.fillRect(Math.floor(px) - 16, 100, 6, 6);
+          c8.fillStyle = '#222222';
+          c8.fillRect(Math.floor(px) - 10, 96, 3, 3);
+          // Wooden sword icon floating
+          const sy = 56 + Math.sin(t * 4) * 4;
+          c8.save();
+          c8.translate(152, sy);
+          c8.rotate(-0.65);
+          c8.fillStyle = '#d4a46a'; c8.fillRect(-3, -24, 6, 26);
+          c8.fillStyle = '#6e4726'; c8.fillRect(-10, 0, 20, 4);
+          c8.fillStyle = '#4f3219'; c8.fillRect(-3, 4, 6, 10);
+          c8.restore();
+          c8.fillStyle = '#122610';
+          c8.font = 'bold 10px monospace';
+          c8.fillText('THREE.JS 3D • VOXEL CRAFT & HUNT', 14, 168);
+        }
+
         function tick(now) {
           const t = now / 1000;
           drawChromaCover(t);
@@ -907,6 +991,7 @@
           drawAetherPixiCover(t);
           drawShatterCover(t);
           drawRevivalCover(t);
+          drawVoxelCover(t);
           requestAnimationFrame(tick);
         }
         requestAnimationFrame(tick);
