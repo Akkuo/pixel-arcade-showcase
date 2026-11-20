@@ -86,6 +86,9 @@
       .card.pixi:hover {
         border-color: rgba(168, 128, 255, 0.65);
       }
+      .card.origami:hover {
+        border-color: rgba(126, 242, 255, 0.68);
+      }
       .cover-wrap {
         position: relative;
         aspect-ratio: 16 / 9;
@@ -199,6 +202,10 @@
       .btn.play-pixi {
         background: linear-gradient(135deg, #b078ff, #4ae3ff);
         color: #0d0a1e;
+      }
+      .btn.play-origami {
+        background: linear-gradient(135deg, #7ef2ff, #ffe078);
+        color: #0b1424;
       }
       .btn.ghost {
         flex: 0 0 auto;
@@ -349,6 +356,36 @@
             </div>
           </div>
         </article>
+
+        <!-- CARD 4: ORIGAMI SKY (THREE.JS 3D) -->
+        <article class="card origami">
+          <div class="cover-wrap">
+            <canvas id="cover-origami" width="320" height="180"></canvas>
+            <span class="cover-tag">Three.js 3D 飛行 • 無限摺紙峽谷</span>
+          </div>
+          <div class="card-body">
+            <h2>ORIGAMI SKY <span>紙翼長空 3D</span></h2>
+            <p class="desc">
+              以 <strong>Three.js</strong> 打造的 3D 摺紙飛機飛行滑翔遊戲。無限串流低多邊形山谷、石拱門與動態日夜天色，支援俯衝加速、翼尖氣流軌跡、發光氣流環連段、3 種飛行視角與隨空速變化的 Web Audio 風聲。
+            </p>
+            <div class="pills">
+              <span class="pill">Three.js 3D 摺紙幾何</span>
+              <span class="pill">無限串流低多邊形山谷</span>
+              <span class="pill">動態日夜天色循環</span>
+              <span class="pill">氣流動力學 & 3 視角</span>
+              <span class="pill">動態風聲 & 五聲音階</span>
+              <span class="pill">鍵盤 / 滑鼠 / 手機觸控</span>
+            </div>
+            <div class="controls-box">
+              <strong>操作說明：</strong>
+              <kbd>W</kbd><kbd>S</kbd><kbd>A</kbd><kbd>D</kbd> 或 <kbd>滑鼠/觸控拖曳</kbd> 控制俯仰與傾斜・<kbd>Space</kbd> 氣流加速・<kbd>C</kbd> 切換三種視角・<kbd>I</kbd> 反轉 Y 軸
+            </div>
+            <div class="actions">
+              <a class="btn play-origami" href="https://akkuo.github.io/origami-sky/" target="_blank" rel="noopener">▶ 立即起飛</a>
+              <a class="btn ghost" href="https://github.com/Akkuo/origami-sky" target="_blank" rel="noopener">GitHub</a>
+            </div>
+          </div>
+        </article>
       </section>
 
       <section class="story">
@@ -378,9 +415,11 @@
         const c1 = document.getElementById('cover-chroma').getContext('2d');
         const c2 = document.getElementById('cover-aether').getContext('2d');
         const c3 = document.getElementById('cover-pixi').getContext('2d');
+        const c4 = document.getElementById('cover-origami').getContext('2d');
         c1.imageSmoothingEnabled = false;
         c2.imageSmoothingEnabled = false;
         c3.imageSmoothingEnabled = false;
+        c4.imageSmoothingEnabled = true;
 
         function drawChromaCover(t) {
           const isLunar = Math.floor(t / 3.2) % 2 === 1;
@@ -556,11 +595,63 @@
           c3.fillText('PIXI.JS v8 • GPU SCENE GRAPH + SHOCKWAVE', 14, 168);
         }
 
+        function drawOrigamiCover(t) {
+          const grad = c4.createLinearGradient(0, 0, 0, 180);
+          grad.addColorStop(0, '#48a8e0');
+          grad.addColorStop(0.55, '#a8e0f5');
+          grad.addColorStop(1, '#ffe0a8');
+          c4.fillStyle = grad;
+          c4.fillRect(0, 0, 320, 180);
+
+          // Low-poly canyon mountains
+          c4.fillStyle = '#47a872';
+          c4.beginPath();
+          c4.moveTo(0, 180); c4.lineTo(0, 108); c4.lineTo(95, 142); c4.lineTo(145, 180);
+          c4.closePath(); c4.fill();
+          c4.fillStyle = '#2f8258';
+          c4.beginPath();
+          c4.moveTo(320, 180); c4.lineTo(320, 96); c4.lineTo(222, 138); c4.lineTo(175, 180);
+          c4.closePath(); c4.fill();
+
+          // Glowing golden boost ring ahead
+          const ringScale = 1 + Math.sin(t * 2.5) * 0.06;
+          c4.strokeStyle = '#ffd166';
+          c4.lineWidth = 4;
+          c4.beginPath();
+          c4.ellipse(160, 84, 34 * ringScale, 26 * ringScale, 0, 0, Math.PI * 2);
+          c4.stroke();
+
+          // 3D Paper Plane banking smoothly
+          const px = 160 + Math.sin(t * 1.8) * 18;
+          const py = 104 + Math.cos(t * 2.4) * 6;
+          const bank = Math.cos(t * 1.8) * 0.25;
+          c4.save();
+          c4.translate(px, py);
+          c4.rotate(bank);
+          // Contrails
+          c4.strokeStyle = 'rgba(255,255,255,0.65)';
+          c4.lineWidth = 2;
+          c4.beginPath(); c4.moveTo(-26, 12); c4.lineTo(-42, 42); c4.moveTo(26, 12); c4.lineTo(42, 42); c4.stroke();
+          // Wings
+          c4.fillStyle = '#fffdf5';
+          c4.beginPath(); c4.moveTo(0, -18); c4.lineTo(-28, 12); c4.lineTo(0, 4); c4.closePath(); c4.fill();
+          c4.fillStyle = '#e6eef8';
+          c4.beginPath(); c4.moveTo(0, -18); c4.lineTo(28, 12); c4.lineTo(0, 4); c4.closePath(); c4.fill();
+          c4.fillStyle = '#ff6b57';
+          c4.beginPath(); c4.moveTo(0, -14); c4.lineTo(-16, 8); c4.lineTo(-11, 7); c4.closePath(); c4.fill();
+          c4.restore();
+
+          c4.fillStyle = '#14304d';
+          c4.font = 'bold 10px monospace';
+          c4.fillText('THREE.JS 3D • AERODYNAMIC ORIGAMI GLIDER', 14, 168);
+        }
+
         function tick(now) {
           const t = now / 1000;
           drawChromaCover(t);
           drawAetherCover(t);
           drawPixiCover(t);
+          drawOrigamiCover(t);
           requestAnimationFrame(tick);
         }
         requestAnimationFrame(tick);
