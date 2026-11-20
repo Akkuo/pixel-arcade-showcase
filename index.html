@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AI Pixel Arcade — 雙作品原創像素遊戲展間</title>
+    <title>AI Web Arcade — 2D × 3D 原創瀏覽器遊戲展間</title>
     <style>
       * {
         box-sizing: border-box;
@@ -279,10 +279,10 @@
   <body>
     <div class="wrap">
       <header>
-        <span class="eyebrow">ZERO-DEPENDENCY • HTML5 CANVAS + WEBGL + WEB AUDIO • DESKTOP & MOBILE</span>
-        <h1>AI 原創 2D 像素遊戲展間</h1>
+        <span class="eyebrow">ZERO ART/AUDIO ASSETS • CANVAS 2D • PIXI.JS v8 • THREE.JS 3D • CANNON-ES PHYSICS</span>
+        <h1>AI 原創 2D × 3D 網頁遊戲展間</h1>
         <p class="subtitle">
-          無外部引擎、無外部美術與音效素材包——純由程式生成像素精靈、即時 WebGL Bloom 後處理與 Web Audio 合成配樂，打造兩款截然不同玩法的經典致敬之作，支援鍵盤、手把與手機觸控遊玩。
+          全站零外部美術與音效素材檔——涵蓋原生 Canvas 2D、PixiJS v8 GPU 場景圖、Three.js 3D 飛行與 cannon-es 剛體物理破壞四大技術路線，集結 6 款可立即於桌面與手機遊玩的原創作品。
         </p>
       </header>
 
@@ -469,24 +469,28 @@
       </section>
 
       <section class="story">
-        <h3>AI 協作開發歷程與 Gemini 4 Neon 實戰亮點</h3>
+        <h3>AI 協作開發歷程與四大引擎路線實戰亮點（Gemini 4 Neon）</h3>
         <div class="story-grid">
           <div class="story-item">
-            <h4>1. 雙階段 HiDPI + WebGL 清晰渲染</h4>
-            <p>解決低解析度畫布拉伸造成中文字糊掉的痛點：像素世界保持點對點銳利，UI 與對話框以原生 Retina 解析度繪製，再送入 WebGL Fragment Shader 疊加真 Bloom 與相位色差。</p>
+            <h4>1. 原生 Canvas 2D vs PixiJS v8 同源對照</h4>
+            <p>兩款 2D 作品皆保留零相依原版（雙階段 HiDPI + 自寫 WebGL Bloom）與 PixiJS v8 GPU 版（Sprite Pooling、耶穌光束與空間折射震波濾鏡），可直接同源對比渲染架構差異。</p>
           </div>
           <div class="story-item">
-            <h4>2. 實測驅動的手感與關卡迭代</h4>
-            <p>透過實際試玩修正鏡頭轉向甩動暈眩（改為置中鎖定），並把 6 大關卡拆分為 6 套完全互斥的生態與機關（彈射環、倒影運河、室內火球鏈、極光滑冰氣流）。</p>
+            <h4>2. Three.js 3D 飛行與剛體物理破壞</h4>
+            <p>從 2D 跨入 3D：《紙翼長空》實作無限串流低多邊形峽谷與空氣動力學；《SHATTER LAB》更以單一 41KB HTML 整合 cannon-es 關節布娃娃、Jenga 堆疊與連鎖油桶爆破。</p>
           </div>
           <div class="story-item">
-            <h4>3. Gemini 4 Neon 開發體感觀察</h4>
-            <p>強項在於跨模組一次整合、快速將抽象體感轉譯成工程解法與端到端部署；但「視覺暈眩、畫面糊度、關卡重複感」仍高度仰賴人類試玩把關——人機短週期協作效果最佳。</p>
+            <h4>3. 實測驅動的手感、UI 與關卡迭代</h4>
+            <p>透過實際試玩快速修正鏡頭轉向暈眩（改置中鎖定）、集中飛行儀表板 HUD 減少掃視距離，並把 6 大關卡拆分為 6 套完全互斥的生態與專屬機關。</p>
+          </div>
+          <div class="story-item">
+            <h4>4. Gemini 4 Neon 實戰體感觀察</h4>
+            <p>強項在於跨領域一次整合（GLSL、物理約束、Web Audio 合成與端到端 GitHub Pages 部署）；但視覺清晰度、暈眩感與關卡差異化仍仰賴人類試玩把關——人機短週期協作效果最佳。</p>
           </div>
         </div>
       </section>
 
-      <footer>Built with Vanilla HTML5 Canvas, WebGL & Web Audio API • Zero External Dependencies</footer>
+      <footer>Built with Vanilla Canvas 2D, PixiJS v8, Three.js, cannon-es & Web Audio API • Zero External Art/Audio Asset Files</footer>
     </div>
 
     <script>
