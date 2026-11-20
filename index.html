@@ -83,6 +83,9 @@
       .card.aether:hover {
         border-color: rgba(94, 245, 148, 0.55);
       }
+      .card.pixi:hover {
+        border-color: rgba(168, 128, 255, 0.65);
+      }
       .cover-wrap {
         position: relative;
         aspect-ratio: 16 / 9;
@@ -192,6 +195,10 @@
       .btn.play-aether {
         background: linear-gradient(135deg, #3ee07e, #24b8a6);
         color: #071a10;
+      }
+      .btn.play-pixi {
+        background: linear-gradient(135deg, #b078ff, #4ae3ff);
+        color: #0d0a1e;
       }
       .btn.ghost {
         flex: 0 0 auto;
@@ -312,6 +319,36 @@
             </div>
           </div>
         </article>
+
+        <!-- CARD 3: CHROMA KNIGHT PIXI v8 EDITION -->
+        <article class="card pixi">
+          <div class="cover-wrap">
+            <canvas id="cover-pixi" width="320" height="180"></canvas>
+            <span class="cover-tag">PixiJS v8 GPU 引擎 • 空間折射震波 & 光束</span>
+          </div>
+          <div class="card-body">
+            <h2>CHROMA KNIGHT <span>PixiJS v8 版</span></h2>
+            <p class="desc">
+              與原版共享 100% 物理與 6 大關卡核心，將整個渲染管線抽換為 <strong>PixiJS v8 GPU 場景圖</strong>：支援 <strong>Sprite Pooling、動態耶穌光束（Godrays）、空間扭曲震波濾鏡（Shockwave）</strong> 與即時 GPU 遙測面板，可與原版同源對比效能與光影差異！
+            </p>
+            <div class="pills">
+              <span class="pill">PixiJS v8 WebGL2</span>
+              <span class="pill">空間折射震波 Filter</span>
+              <span class="pill">Additive 耶穌光束</span>
+              <span class="pill">GPU Sprite Pooling</span>
+              <span class="pill">即時 GPU 遙測 HUD</span>
+              <span class="pill">手機觸控手把</span>
+            </div>
+            <div class="controls-box">
+              <strong>操作說明：</strong>
+              與原版完全一致・<kbd>Shift</kbd> 觸發空間折射震波・<kbd>G</kbd> 即時切換 PixiJS Filter 對比・<kbd>1–6</kbd> 快速選關・<kbd>F2</kbd> 編輯器
+            </div>
+            <div class="actions">
+              <a class="btn play-pixi" href="https://akkuo.github.io/chroma-knight-pixi/" target="_blank" rel="noopener">▶ 立即遊玩</a>
+              <a class="btn ghost" href="https://github.com/Akkuo/chroma-knight-pixi" target="_blank" rel="noopener">GitHub</a>
+            </div>
+          </div>
+        </article>
       </section>
 
       <section class="story">
@@ -340,8 +377,10 @@
       (() => {
         const c1 = document.getElementById('cover-chroma').getContext('2d');
         const c2 = document.getElementById('cover-aether').getContext('2d');
+        const c3 = document.getElementById('cover-pixi').getContext('2d');
         c1.imageSmoothingEnabled = false;
         c2.imageSmoothingEnabled = false;
+        c3.imageSmoothingEnabled = false;
 
         function drawChromaCover(t) {
           const isLunar = Math.floor(t / 3.2) % 2 === 1;
@@ -469,10 +508,59 @@
           }
         }
 
+        function drawPixiCover(t) {
+          const grad = c3.createLinearGradient(0, 0, 0, 180);
+          grad.addColorStop(0, '#090720');
+          grad.addColorStop(0.55, '#25185c');
+          grad.addColorStop(1, '#1d5480');
+          c3.fillStyle = grad;
+          c3.fillRect(0, 0, 320, 180);
+
+          // Additive Godrays
+          c3.save();
+          c3.globalCompositeOperation = 'lighter';
+          for (let i = 0; i < 4; i++) {
+            const rx = ((i * 90 + Math.sin(t + i) * 14) % 360) - 20;
+            c3.fillStyle = i % 2 === 0 ? 'rgba(176, 120, 255, 0.14)' : 'rgba(74, 227, 255, 0.14)';
+            c3.beginPath();
+            c3.moveTo(rx, 0);
+            c3.lineTo(rx + 28, 0);
+            c3.lineTo(rx - 32, 180);
+            c3.lineTo(rx - 64, 180);
+            c3.closePath();
+            c3.fill();
+          }
+
+          // Refractive Shockwave Ring pulsing from center
+          const sr = ((t * 72) % 140) + 12;
+          const alpha = Math.max(0, 1 - sr / 152);
+          c3.strokeStyle = `rgba(126, 247, 255, ${(alpha * 0.85).toFixed(2)})`;
+          c3.lineWidth = 3;
+          c3.beginPath();
+          c3.arc(160, 94, sr, 0, Math.PI * 2);
+          c3.stroke();
+          c3.strokeStyle = `rgba(255, 190, 88, ${(alpha * 0.55).toFixed(2)})`;
+          c3.lineWidth = 2;
+          c3.beginPath();
+          c3.arc(160, 94, Math.max(2, sr - 5), 0, Math.PI * 2);
+          c3.stroke();
+          c3.restore();
+
+          // Glowing crystal platform & hero silhouette
+          c3.fillStyle = '#3ee0ff';
+          c3.fillRect(112, 118, 96, 12);
+          c3.fillStyle = '#ffffff';
+          c3.fillRect(154, 94 + Math.sin(t * 6) * 2, 12, 22);
+          c3.fillStyle = '#b078ff';
+          c3.font = 'bold 10px monospace';
+          c3.fillText('PIXI.JS v8 • GPU SCENE GRAPH + SHOCKWAVE', 14, 168);
+        }
+
         function tick(now) {
           const t = now / 1000;
           drawChromaCover(t);
           drawAetherCover(t);
+          drawPixiCover(t);
           requestAnimationFrame(tick);
         }
         requestAnimationFrame(tick);
